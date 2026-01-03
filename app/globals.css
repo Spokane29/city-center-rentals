@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 248 250 252; /* slate-50 */
+    --foreground: 15 23 42; /* slate-900 */
+    --primary: 15 23 42; /* slate-900 */
+    --primary-foreground: 248 250 252; /* slate-50 */
+    --accent: 245 158 11; /* amber-500 */
+    --accent-foreground: 15 23 42; /* slate-900 */
+    --muted: 100 116 139; /* slate-500 */
+    --muted-foreground: 100 116 139; /* slate-500 */
+    --border: 226 232 240; /* slate-200 */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+

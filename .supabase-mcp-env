@@ -1,0 +1,19 @@
+# MCP Supabase Project Configuration
+# This file is used to configure which Supabase project the MCP server connects to
+# Update SUPABASE_PROJECT_REF when switching projects
+# 
+# To use: source this file or set it as an environment variable in your MCP server config
+
+# Current project reference (update this when switching projects)
+SUPABASE_PROJECT_REF=ikdcngemtzjfurjduljs
+
+# Project name for reference
+SUPABASE_PROJECT_NAME=Spokane-rent-Facebook
+
+# Instructions:
+# 1. Update SUPABASE_PROJECT_REF above with your desired project reference ID
+# 2. Source this file: source .supabase-mcp-env
+# 3. Or restart your MCP server with this environment variable set
+#
+# To find project references: supabase projects list
+
