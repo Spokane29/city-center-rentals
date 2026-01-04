@@ -59,6 +59,7 @@ export default function PropertyWithForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, setError] = useState("");
+  const [showMobileForm, setShowMobileForm] = useState(false);
 
   // Interior images only - Living.jpeg is the main/first image
   const images = [
@@ -488,214 +489,368 @@ export default function PropertyWithForm() {
             </div>
           )}
 
-          {/* Contact Form - Shows first on mobile */}
-          <div className="lg:col-span-1 order-1 lg:order-2">
+          {/* Mobile CTA Button - Only shows on mobile when form is collapsed */}
+          <div className="lg:hidden order-1">
+            {!showMobileForm ? (
+              <button
+                onClick={() => setShowMobileForm(true)}
+                className="w-full bg-blue-900 hover:bg-blue-800 active:bg-blue-950 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all text-lg flex items-center justify-center gap-3"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Schedule a Tour
+              </button>
+            ) : (
+              <div className="bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden">
+                {/* Form Header with Close Button */}
+                <div className="bg-blue-900 text-white px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <h2 className="text-lg font-bold">Request A Tour</h2>
+                  </div>
+                  <button
+                    onClick={() => setShowMobileForm(false)}
+                    className="text-white/80 hover:text-white p-1"
+                    aria-label="Close form"
+                    type="button"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Mobile Form Body */}
+                <form onSubmit={handleSubmit} className="p-4 space-y-3">
+                  {/* Name Row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="mobile-firstName" className="block text-sm font-medium text-slate-700 mb-1.5">
+                        First Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="mobile-firstName"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                        autoComplete="given-name"
+                        className={`w-full px-3 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.firstName ? "border-red-500" : "border-slate-300"}`}
+                        placeholder="John"
+                      />
+                      {errors.firstName && <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>}
+                    </div>
+                    <div>
+                      <label htmlFor="mobile-lastName" className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Last Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="mobile-lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                        autoComplete="family-name"
+                        className={`w-full px-3 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.lastName ? "border-red-500" : "border-slate-300"}`}
+                        placeholder="Doe"
+                      />
+                      {errors.lastName && <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>}
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label htmlFor="mobile-email" className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="mobile-email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      autoComplete="email"
+                      inputMode="email"
+                      className={`w-full px-3 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.email ? "border-red-500" : "border-slate-300"}`}
+                      placeholder="john@example.com"
+                    />
+                    {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+                  </div>
+
+                  {/* Phone */}
+                  <div>
+                    <label htmlFor="mobile-phone" className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="mobile-phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      autoComplete="tel"
+                      inputMode="tel"
+                      className={`w-full px-3 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.phone ? "border-red-500" : "border-slate-300"}`}
+                      placeholder="(888) 613-0442"
+                    />
+                    {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
+                  </div>
+
+                  {/* Tour Date & Time */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="mobile-tourDate" className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Tour Date <span className="text-slate-400 text-xs">(Opt)</span>
+                      </label>
+                      <input
+                        type="date"
+                        id="mobile-tourDate"
+                        name="tourDate"
+                        value={formData.tourDate}
+                        onChange={handleChange}
+                        className="w-full px-2 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="mobile-tourTime" className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Time <span className="text-slate-400 text-xs">(Opt)</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="mobile-tourTime"
+                        name="tourTime"
+                        value={formData.tourTime}
+                        onChange={handleChange}
+                        className="w-full px-2 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                        placeholder="e.g., Mornings"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Notes */}
+                  <div>
+                    <label htmlFor="mobile-notes" className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Notes <span className="text-slate-400 text-xs">(Optional)</span>
+                    </label>
+                    <textarea
+                      id="mobile-notes"
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleChange}
+                      rows={2}
+                      maxLength={500}
+                      className="w-full px-3 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
+                      placeholder="Questions?"
+                    />
+                  </div>
+
+                  {/* Error */}
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p className="text-red-600 text-sm">{error}</p>
+                    </div>
+                  )}
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-blue-900 hover:bg-blue-800 active:bg-blue-950 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition-colors text-base min-h-[52px]"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Sending...
+                      </span>
+                    ) : (
+                      "Schedule Tour"
+                    )}
+                  </button>
+
+                  {/* Call CTA */}
+                  <div className="text-center pt-2 border-t border-slate-200">
+                    <p className="text-slate-600 text-sm mb-1">Or call us directly</p>
+                    <a href="tel:8886130442" className="inline-flex items-center justify-center gap-2 text-blue-600 font-semibold text-lg py-1 active:text-blue-800">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      (888) 613-0442
+                    </a>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Contact Form - Hidden on mobile */}
+          <div className="hidden lg:block lg:col-span-1 order-2">
             <div className="bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden lg:sticky lg:top-20">
               {/* Form Header */}
-              <div className="bg-blue-900 text-white px-4 sm:px-6 py-3 sm:py-4">
-                <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3">
+              <div className="bg-blue-900 text-white px-6 py-4">
+                <div className="flex items-center gap-3">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <h2 className="text-lg sm:text-xl font-bold">Request A Tour</h2>
+                  <h2 className="text-xl font-bold">Request A Tour</h2>
                 </div>
               </div>
 
               {/* Form Body */}
-              <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                {/* Name Row - Side by side on larger screens */}
+              <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                {/* Name Row */}
                 <div className="grid grid-cols-2 gap-3">
-                  {/* First Name */}
                   <div>
-                    <label
-                      htmlFor="property-firstName"
-                      className="block text-sm font-medium text-slate-700 mb-1.5"
-                    >
+                    <label htmlFor="desktop-firstName" className="block text-sm font-medium text-slate-700 mb-1.5">
                       First Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      id="property-firstName"
+                      id="desktop-firstName"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
                       required
                       autoComplete="given-name"
-                      className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                        errors.firstName ? "border-red-500" : "border-slate-300"
-                      }`}
+                      className={`w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.firstName ? "border-red-500" : "border-slate-300"}`}
                       placeholder="John"
                     />
-                    {errors.firstName && (
-                      <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>
-                    )}
+                    {errors.firstName && <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>}
                   </div>
-
-                  {/* Last Name */}
                   <div>
-                    <label
-                      htmlFor="property-lastName"
-                      className="block text-sm font-medium text-slate-700 mb-1.5"
-                    >
+                    <label htmlFor="desktop-lastName" className="block text-sm font-medium text-slate-700 mb-1.5">
                       Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      id="property-lastName"
+                      id="desktop-lastName"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
                       required
                       autoComplete="family-name"
-                      className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                        errors.lastName ? "border-red-500" : "border-slate-300"
-                      }`}
+                      className={`w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.lastName ? "border-red-500" : "border-slate-300"}`}
                       placeholder="Doe"
                     />
-                    {errors.lastName && (
-                      <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>
-                    )}
+                    {errors.lastName && <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>}
                   </div>
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label
-                    htmlFor="property-email"
-                    className="block text-sm font-medium text-slate-700 mb-1.5"
-                  >
+                  <label htmlFor="desktop-email" className="block text-sm font-medium text-slate-700 mb-1.5">
                     Email Address <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
-                    id="property-email"
+                    id="desktop-email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
                     autoComplete="email"
-                    inputMode="email"
-                    className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                      errors.email ? "border-red-500" : "border-slate-300"
-                    }`}
+                    className={`w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.email ? "border-red-500" : "border-slate-300"}`}
                     placeholder="john@example.com"
                   />
-                  {errors.email && (
-                    <p className="mt-1 text-xs text-red-500">{errors.email}</p>
-                  )}
+                  {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
                 </div>
 
                 {/* Phone */}
                 <div>
-                  <label
-                    htmlFor="property-phone"
-                    className="block text-sm font-medium text-slate-700 mb-1.5"
-                  >
+                  <label htmlFor="desktop-phone" className="block text-sm font-medium text-slate-700 mb-1.5">
                     Phone Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
-                    id="property-phone"
+                    id="desktop-phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     required
                     autoComplete="tel"
-                    inputMode="tel"
-                    className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                      errors.phone ? "border-red-500" : "border-slate-300"
-                    }`}
+                    className={`w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${errors.phone ? "border-red-500" : "border-slate-300"}`}
                     placeholder="(888) 613-0442"
                   />
-                  {errors.phone && (
-                    <p className="mt-1 text-xs text-red-500">{errors.phone}</p>
-                  )}
+                  {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
                 </div>
 
-                {/* Tour Date & Time Row - Side by side */}
+                {/* Tour Date & Time */}
                 <div className="grid grid-cols-2 gap-3">
-                  {/* Tour Date */}
                   <div>
-                    <label
-                      htmlFor="property-tourDate"
-                      className="block text-sm font-medium text-slate-700 mb-1.5"
-                    >
+                    <label htmlFor="desktop-tourDate" className="block text-sm font-medium text-slate-700 mb-1.5">
                       Tour Date <span className="text-slate-400 text-xs">(Opt)</span>
                     </label>
                     <input
                       type="date"
-                      id="property-tourDate"
+                      id="desktop-tourDate"
                       name="tourDate"
                       value={formData.tourDate}
                       onChange={handleChange}
-                      className={`w-full px-2 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                        errors.tourDate ? "border-red-500" : "border-slate-300"
-                      }`}
+                      className="w-full px-4 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                     />
                   </div>
-
-                  {/* Tour Time */}
                   <div>
-                    <label
-                      htmlFor="property-tourTime"
-                      className="block text-sm font-medium text-slate-700 mb-1.5"
-                    >
+                    <label htmlFor="desktop-tourTime" className="block text-sm font-medium text-slate-700 mb-1.5">
                       Time <span className="text-slate-400 text-xs">(Opt)</span>
                     </label>
                     <input
                       type="text"
-                      id="property-tourTime"
+                      id="desktop-tourTime"
                       name="tourTime"
                       value={formData.tourTime}
                       onChange={handleChange}
-                      className={`w-full px-2 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                        errors.tourTime ? "border-red-500" : "border-slate-300"
-                      }`}
+                      className="w-full px-4 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                       placeholder="e.g., Mornings"
                     />
                   </div>
                 </div>
 
-                {/* Additional Notes - Shorter on mobile */}
+                {/* Notes */}
                 <div>
-                  <label
-                    htmlFor="property-notes"
-                    className="block text-sm font-medium text-slate-700 mb-1.5"
-                  >
+                  <label htmlFor="desktop-notes" className="block text-sm font-medium text-slate-700 mb-1.5">
                     Notes <span className="text-slate-400 text-xs">(Optional)</span>
                   </label>
                   <textarea
-                    id="property-notes"
+                    id="desktop-notes"
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
                     rows={3}
                     maxLength={500}
-                    className="w-full px-3 sm:px-4 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
                     placeholder="Questions or requirements?"
                   />
                 </div>
 
-                {/* Property Details Summary - Hidden on mobile to save space */}
-                <div className="hidden sm:block bg-slate-50 rounded-lg p-3 sm:p-4 border border-slate-200">
+                {/* Property Details Summary */}
+                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
                   <div className="flex items-center justify-between text-sm text-slate-700">
                     <span>City Center Apartments</span>
                     <span className="font-semibold text-blue-600">$1,000/mo</span>
                   </div>
                 </div>
 
-                {/* Error message */}
+                {/* Error */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                     <p className="text-red-600 text-sm">{error}</p>
                   </div>
                 )}
 
-                {/* Submit Button - Large touch target */}
+                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-900 hover:bg-blue-800 active:bg-blue-950 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition-colors text-base sm:text-lg min-h-[52px]"
+                  className="w-full bg-blue-900 hover:bg-blue-800 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg min-h-[52px]"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
@@ -709,20 +864,6 @@ export default function PropertyWithForm() {
                     "Schedule Tour"
                   )}
                 </button>
-
-                {/* Quick call CTA on mobile */}
-                <div className="sm:hidden text-center">
-                  <p className="text-slate-600 text-sm mb-2">Or call us directly</p>
-                  <a
-                    href="tel:8886130442"
-                    className="inline-flex items-center justify-center gap-2 text-blue-600 font-semibold text-lg py-2 active:text-blue-800"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    (888) 613-0442
-                  </a>
-                </div>
               </form>
             </div>
           </div>
