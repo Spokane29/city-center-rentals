@@ -182,9 +182,9 @@ export default function PropertyWithForm() {
         throw new Error("Failed to submit");
       }
 
-      // Fire Facebook Pixel event if available
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Lead");
+      // Fire Facebook Pixel Lead event
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Lead");
       }
 
       // Show success modal
