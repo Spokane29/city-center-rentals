@@ -144,13 +144,6 @@ export default function PropertyWithForm() {
       }
     }
 
-    if (!formData.tourDate.trim()) {
-      newErrors.tourDate = "Preferred tour date is required";
-    }
-
-    if (!formData.tourTime.trim()) {
-      newErrors.tourTime = "Preferred time is required";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -554,7 +547,7 @@ export default function PropertyWithForm() {
                     htmlFor="property-tourDate"
                     className="block text-sm font-medium text-slate-700 mb-2"
                   >
-                    Preferred Tour Date <span className="text-red-500">*</span>
+                    Preferred Tour Date <span className="text-slate-500 text-xs font-normal">(Optional)</span>
                   </label>
                   <input
                     type="date"
@@ -562,7 +555,6 @@ export default function PropertyWithForm() {
                     name="tourDate"
                     value={formData.tourDate}
                     onChange={handleChange}
-                    required
                     className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
                       errors.tourDate ? "border-red-500" : "border-slate-300"
                     }`}
@@ -578,7 +570,7 @@ export default function PropertyWithForm() {
                     htmlFor="property-tourTime"
                     className="block text-sm font-medium text-slate-700 mb-2"
                   >
-                    Preferred Time <span className="text-red-500">*</span>
+                    Preferred Time <span className="text-slate-500 text-xs font-normal">(Optional)</span>
                   </label>
                   <input
                     type="text"
@@ -586,7 +578,6 @@ export default function PropertyWithForm() {
                     name="tourTime"
                     value={formData.tourTime}
                     onChange={handleChange}
-                    required
                     className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
                       errors.tourTime ? "border-red-500" : "border-slate-300"
                     }`}
