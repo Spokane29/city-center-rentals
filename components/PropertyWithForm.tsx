@@ -193,6 +193,11 @@ export default function PropertyWithForm() {
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "Lead");
       }
+
+      // Redirect to home page after a brief delay to show success message
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
     } catch (err) {
       setError("Something went wrong. Please call us at (888) 613-0442.");
     } finally {
