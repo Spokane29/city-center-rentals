@@ -25,3 +25,51 @@
   }
 }
 
+/* Hide scrollbar for horizontal scroll on mobile */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Improve touch targets and tap highlights */
+@layer base {
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent text selection on interactive elements */
+  button {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Better input styling on iOS */
+  input, textarea, select {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0.5rem;
+  }
+  
+  /* Prevent zoom on input focus on iOS */
+  @media screen and (max-width: 640px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+}
+

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import React, { useState, FormEvent, ChangeEvent, useEffect, useRef } from "react";
 
 interface FormData {
   firstName: string;
@@ -211,6 +211,32 @@ export default function PropertyWithForm() {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  // Touch swipe support for mobile
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const distance = touchStartX.current - touchEndX.current;
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // Swiped left - next image
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      } else {
+        // Swiped right - previous image
+        setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+      }
+    }
+  };
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -228,13 +254,47 @@ export default function PropertyWithForm() {
   }, [images.length]);
 
   return (
-    <section className="bg-white pt-20 sm:pt-24 pb-12 sm:pb-16">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
-          {/* Left Column - Property Details (2/3 width) */}
-          <div className="lg:col-span-2 space-y-5">
-            {/* Property Title, Address, and Key Details - Level with Form */}
-            <div className="mb-5">
+    <section className="bg-white pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+        {/* Mobile: Title first, then form, then gallery */}
+        {/* Desktop: Gallery left, form right */}
+        
+        {/* Mobile Title - Only shows on mobile */}
+        <div className="lg:hidden mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">
+            Beautiful 1 Bedroom Apartment Available Now !
+          </h1>
+          <p className="text-slate-600 text-base mb-3">
+            29 E 6th Ave, Spokane, WA 99202
+          </p>
+          {/* Key Details - Compact on mobile */}
+          <div className="flex flex-wrap gap-3 sm:gap-4 text-sm text-slate-700">
+            <div className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span className="font-medium">1 Bed</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="font-medium">1 Bath</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-blue-600 font-semibold">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>$1,000/mo</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-12 items-start">
+          {/* Left Column - Property Details (2/3 width) - Hidden title on mobile */}
+          <div className="lg:col-span-2 space-y-4 sm:space-y-5 order-2 lg:order-1">
+            {/* Desktop Title - Hidden on mobile */}
+            <div className="hidden lg:block mb-5">
               <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
                 Beautiful 1 Bedroom Apartment Available Now !
               </h1>
@@ -264,25 +324,31 @@ export default function PropertyWithForm() {
               </div>
             </div>
 
-            {/* Price Badge on Main Image */}
+            {/* Main Image with Swipe Support */}
             <div className="relative rounded-lg overflow-hidden shadow-lg">
-              <div className="relative aspect-[4/3] bg-slate-200">
+              <div 
+                className="relative aspect-[4/3] sm:aspect-[16/10] bg-slate-200 touch-pan-y"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
                 <Image
                   src={images[currentImageIndex]}
                   alt={`Property image ${currentImageIndex + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-cover select-none"
                   priority={currentImageIndex === 0}
+                  draggable={false}
                 />
-                {/* Navigation Arrows */}
+                {/* Navigation Arrows - Larger touch targets on mobile */}
                 <button
                   onClick={(e) => prevImage(e)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white text-slate-900 p-3 rounded-full shadow-xl transition-all z-10 hover:scale-110 cursor-pointer"
+                  className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white active:bg-white text-slate-900 p-2.5 sm:p-3 rounded-full shadow-xl transition-all z-10 hover:scale-110 active:scale-95 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                   aria-label="Previous image"
                   type="button"
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -297,12 +363,12 @@ export default function PropertyWithForm() {
                 </button>
                 <button
                   onClick={(e) => nextImage(e)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white text-slate-900 p-3 rounded-full shadow-xl transition-all z-10 hover:scale-110 cursor-pointer"
+                  className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white active:bg-white text-slate-900 p-2.5 sm:p-3 rounded-full shadow-xl transition-all z-10 hover:scale-110 active:scale-95 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
                   aria-label="Next image"
                   type="button"
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -315,16 +381,20 @@ export default function PropertyWithForm() {
                     />
                   </svg>
                 </button>
-                {/* Price Badge */}
-                <div className="absolute top-4 left-4 bg-blue-900 text-white px-4 py-3 rounded-lg shadow-lg max-w-xs">
-                  <div className="text-xl font-bold">$1,000 Unfurnished</div>
-                  <div className="text-sm font-normal mt-0.5">Furnished add $100</div>
+                {/* Price Badge - Smaller on mobile */}
+                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-blue-900 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-lg">
+                  <div className="text-base sm:text-xl font-bold">$1,000 Unfurnished</div>
+                  <div className="text-xs sm:text-sm font-normal mt-0.5">Furnished add $100</div>
+                </div>
+                {/* Image Counter - Mobile indicator */}
+                <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/60 text-white px-2.5 py-1 rounded-full text-xs sm:text-sm font-medium">
+                  {currentImageIndex + 1} / {images.length}
                 </div>
               </div>
             </div>
 
-            {/* Thumbnail Grid - All images */}
-            <div className="grid grid-cols-4 gap-3">
+            {/* Thumbnail Grid - Scrollable on mobile */}
+            <div className="flex gap-2 sm:grid sm:grid-cols-4 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 -mx-3 px-3 sm:mx-0 sm:px-0 scrollbar-hide">
               {images.map((image, index) => (
                 <button
                   key={index}
@@ -332,10 +402,10 @@ export default function PropertyWithForm() {
                     e.preventDefault();
                     setCurrentImageIndex(index);
                   }}
-                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                  className={`relative flex-shrink-0 w-20 h-20 sm:w-auto sm:h-auto sm:aspect-square rounded-lg overflow-hidden border-2 transition-all cursor-pointer min-w-[80px] min-h-[80px] ${
                     currentImageIndex === index
                       ? "border-blue-600 ring-2 ring-blue-200"
-                      : "border-slate-300 hover:border-blue-400 hover:ring-1 hover:ring-blue-200"
+                      : "border-slate-300 active:border-blue-400"
                   }`}
                   type="button"
                   aria-label={`View image ${index + 1}`}
@@ -355,19 +425,19 @@ export default function PropertyWithForm() {
 
             {/* Description */}
             <div>
-              <p className="text-slate-700 leading-relaxed text-base">
+              <p className="text-slate-700 leading-relaxed text-sm sm:text-base">
                 Experience the best of city living at 29 E 6th Avenue - perfectly positioned near downtown Spokane where work, study, and urban lifestyle converge.
               </p>
             </div>
 
-            {/* Property Features */}
+            {/* Property Features - Collapsible on mobile */}
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">Property Features</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4">Property Features</h2>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {propertyFeatures.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
+                  <div key={index} className="flex items-center gap-2 sm:gap-3">
                     <svg
-                      className="w-5 h-5 text-green-600 flex-shrink-0"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -379,7 +449,7 @@ export default function PropertyWithForm() {
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    <span className="text-slate-700">{feature}</span>
+                    <span className="text-slate-700 text-sm sm:text-base">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -418,76 +488,81 @@ export default function PropertyWithForm() {
             </div>
           )}
 
-          {/* Right Column - Contact Form (1/3 width) */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden sticky top-8">
+          {/* Contact Form - Shows first on mobile */}
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <div className="bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden lg:sticky lg:top-20">
               {/* Form Header */}
-              <div className="bg-blue-900 text-white px-6 py-4">
-                <div className="flex items-center gap-3">
+              <div className="bg-blue-900 text-white px-4 sm:px-6 py-3 sm:py-4">
+                <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <h2 className="text-xl font-bold">Request A tour</h2>
+                  <h2 className="text-lg sm:text-xl font-bold">Request A Tour</h2>
                 </div>
               </div>
 
               {/* Form Body */}
-              <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                {/* First Name */}
-                <div>
-                  <label
-                    htmlFor="property-firstName"
-                    className="block text-sm font-medium text-slate-700 mb-2"
-                  >
-                    First Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="property-firstName"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                      errors.firstName ? "border-red-500" : "border-slate-300"
-                    }`}
-                    placeholder="John"
-                  />
-                  {errors.firstName && (
-                    <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>
-                  )}
-                </div>
+              <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                {/* Name Row - Side by side on larger screens */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* First Name */}
+                  <div>
+                    <label
+                      htmlFor="property-firstName"
+                      className="block text-sm font-medium text-slate-700 mb-1.5"
+                    >
+                      First Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="property-firstName"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
+                      autoComplete="given-name"
+                      className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                        errors.firstName ? "border-red-500" : "border-slate-300"
+                      }`}
+                      placeholder="John"
+                    />
+                    {errors.firstName && (
+                      <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>
+                    )}
+                  </div>
 
-                {/* Last Name */}
-                <div>
-                  <label
-                    htmlFor="property-lastName"
-                    className="block text-sm font-medium text-slate-700 mb-2"
-                  >
-                    Last Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="property-lastName"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                      errors.lastName ? "border-red-500" : "border-slate-300"
-                    }`}
-                    placeholder="Doe"
-                  />
-                  {errors.lastName && (
-                    <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>
-                  )}
+                  {/* Last Name */}
+                  <div>
+                    <label
+                      htmlFor="property-lastName"
+                      className="block text-sm font-medium text-slate-700 mb-1.5"
+                    >
+                      Last Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="property-lastName"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                      autoComplete="family-name"
+                      className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                        errors.lastName ? "border-red-500" : "border-slate-300"
+                      }`}
+                      placeholder="Doe"
+                    />
+                    {errors.lastName && (
+                      <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Email */}
                 <div>
                   <label
                     htmlFor="property-email"
-                    className="block text-sm font-medium text-slate-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-1.5"
                   >
                     Email Address <span className="text-red-500">*</span>
                   </label>
@@ -498,7 +573,9 @@ export default function PropertyWithForm() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                    autoComplete="email"
+                    inputMode="email"
+                    className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
                       errors.email ? "border-red-500" : "border-slate-300"
                     }`}
                     placeholder="john@example.com"
@@ -512,7 +589,7 @@ export default function PropertyWithForm() {
                 <div>
                   <label
                     htmlFor="property-phone"
-                    className="block text-sm font-medium text-slate-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-1.5"
                   >
                     Phone Number <span className="text-red-500">*</span>
                   </label>
@@ -523,7 +600,9 @@ export default function PropertyWithForm() {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                    autoComplete="tel"
+                    inputMode="tel"
+                    className={`w-full px-3 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
                       errors.phone ? "border-red-500" : "border-slate-300"
                     }`}
                     placeholder="(888) 613-0442"
@@ -533,83 +612,75 @@ export default function PropertyWithForm() {
                   )}
                 </div>
 
-                {/* Tour Date */}
-                <div>
-                  <label
-                    htmlFor="property-tourDate"
-                    className="block text-sm font-medium text-slate-700 mb-2"
-                  >
-                    Preferred Tour Date <span className="text-slate-500 text-xs font-normal">(Optional)</span>
-                  </label>
-                  <input
-                    type="date"
-                    id="property-tourDate"
-                    name="tourDate"
-                    value={formData.tourDate}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                      errors.tourDate ? "border-red-500" : "border-slate-300"
-                    }`}
-                  />
-                  {errors.tourDate && (
-                    <p className="mt-1 text-xs text-red-500">{errors.tourDate}</p>
-                  )}
+                {/* Tour Date & Time Row - Side by side */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Tour Date */}
+                  <div>
+                    <label
+                      htmlFor="property-tourDate"
+                      className="block text-sm font-medium text-slate-700 mb-1.5"
+                    >
+                      Tour Date <span className="text-slate-400 text-xs">(Opt)</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="property-tourDate"
+                      name="tourDate"
+                      value={formData.tourDate}
+                      onChange={handleChange}
+                      className={`w-full px-2 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                        errors.tourDate ? "border-red-500" : "border-slate-300"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Tour Time */}
+                  <div>
+                    <label
+                      htmlFor="property-tourTime"
+                      className="block text-sm font-medium text-slate-700 mb-1.5"
+                    >
+                      Time <span className="text-slate-400 text-xs">(Opt)</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="property-tourTime"
+                      name="tourTime"
+                      value={formData.tourTime}
+                      onChange={handleChange}
+                      className={`w-full px-2 sm:px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                        errors.tourTime ? "border-red-500" : "border-slate-300"
+                      }`}
+                      placeholder="e.g., Mornings"
+                    />
+                  </div>
                 </div>
 
-                {/* Tour Time */}
-                <div>
-                  <label
-                    htmlFor="property-tourTime"
-                    className="block text-sm font-medium text-slate-700 mb-2"
-                  >
-                    Preferred Time <span className="text-slate-500 text-xs font-normal">(Optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="property-tourTime"
-                    name="tourTime"
-                    value={formData.tourTime}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-                      errors.tourTime ? "border-red-500" : "border-slate-300"
-                    }`}
-                    placeholder="e.g., Mornings, After 3pm, Anytime"
-                  />
-                  {errors.tourTime && (
-                    <p className="mt-1 text-xs text-red-500">{errors.tourTime}</p>
-                  )}
-                </div>
-
-                {/* Additional Notes */}
+                {/* Additional Notes - Shorter on mobile */}
                 <div>
                   <label
                     htmlFor="property-notes"
-                    className="block text-sm font-medium text-slate-700 mb-2"
+                    className="block text-sm font-medium text-slate-700 mb-1.5"
                   >
-                    Additional Notes <span className="text-slate-500 text-xs font-normal">(Optional)</span>
+                    Notes <span className="text-slate-400 text-xs">(Optional)</span>
                   </label>
                   <textarea
                     id="property-notes"
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
-                    rows={4}
+                    rows={3}
                     maxLength={500}
-                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
-                    placeholder="Any specific questions or requirements?"
+                    className="w-full px-3 sm:px-4 py-3 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
+                    placeholder="Questions or requirements?"
                   />
-                  <p className="mt-1 text-xs text-slate-500 text-right">
-                    {formData.notes.length}/500
-                  </p>
                 </div>
 
-                {/* Property Details Summary */}
-                <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                  <h4 className="text-sm font-semibold text-slate-900 mb-2">Property Details:</h4>
-                  <div className="space-y-1 text-sm text-slate-700">
-                    <div>City Center Apartments</div>
-                    <div>29 E 6th Ave, Spokane, WA 99202</div>
-                    <div className="font-semibold text-blue-600">$1,000/month (Furnished +$100)</div>
+                {/* Property Details Summary - Hidden on mobile to save space */}
+                <div className="hidden sm:block bg-slate-50 rounded-lg p-3 sm:p-4 border border-slate-200">
+                  <div className="flex items-center justify-between text-sm text-slate-700">
+                    <span>City Center Apartments</span>
+                    <span className="font-semibold text-blue-600">$1,000/mo</span>
                   </div>
                 </div>
 
@@ -620,14 +691,38 @@ export default function PropertyWithForm() {
                   </div>
                 )}
 
-                {/* Submit Button */}
+                {/* Submit Button - Large touch target */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-900 hover:bg-blue-800 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-blue-900 hover:bg-blue-800 active:bg-blue-950 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition-colors text-base sm:text-lg min-h-[52px]"
                 >
-                  {isSubmitting ? "Sending..." : "Schedule Tour"}
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Sending...
+                    </span>
+                  ) : (
+                    "Schedule Tour"
+                  )}
                 </button>
+
+                {/* Quick call CTA on mobile */}
+                <div className="sm:hidden text-center">
+                  <p className="text-slate-600 text-sm mb-2">Or call us directly</p>
+                  <a
+                    href="tel:8886130442"
+                    className="inline-flex items-center justify-center gap-2 text-blue-600 font-semibold text-lg py-2 active:text-blue-800"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    (888) 613-0442
+                  </a>
+                </div>
               </form>
             </div>
           </div>
