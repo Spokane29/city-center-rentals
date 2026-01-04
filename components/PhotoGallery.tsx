@@ -22,10 +22,6 @@ const images: GalleryImage[] = [
     alt: "Clean bathroom",
   },
   {
-    src: "/images/property/city-center-outside.jpeg",
-    alt: "City Center Apartments building exterior",
-  },
-  {
     src: "/images/property/outside-Spokane-6th-s.jpeg",
     alt: "6th Avenue street view in downtown Spokane",
   },
@@ -107,20 +103,21 @@ export default function PhotoGallery() {
 
   return (
     <>
-      <section id="gallery" className="bg-white py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
+      <section id="gallery" className="bg-white py-12 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 sm:mb-8 text-center">
             Photo Gallery
           </h2>
 
           {/* Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 max-w-6xl mx-auto">
             {/* Large featured image */}
             <div
-              className="md:col-span-2 md:row-span-2 cursor-pointer group relative overflow-hidden rounded-lg"
+              className="sm:col-span-2 md:col-span-2 md:row-span-2 cursor-pointer group relative overflow-hidden rounded-lg touch-manipulation"
               onClick={() => openLightbox(0)}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <div className="relative w-full h-full min-h-[300px] md:min-h-[500px]">
+              <div className="relative w-full h-full min-h-[250px] sm:min-h-[300px] md:min-h-[500px]">
                 <Image
                   src={images[0].src}
                   alt={images[0].alt}
@@ -151,10 +148,11 @@ export default function PhotoGallery() {
             {images.slice(1).map((image, index) => (
               <div
                 key={index + 1}
-                className="cursor-pointer group relative overflow-hidden rounded-lg"
+                className="cursor-pointer group relative overflow-hidden rounded-lg touch-manipulation"
                 onClick={() => openLightbox(index + 1)}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                <div className="relative w-full h-full min-h-[200px]">
+                <div className="relative w-full h-full min-h-[200px] sm:min-h-[250px]">
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -197,11 +195,12 @@ export default function PhotoGallery() {
           {/* Close button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 z-10 text-white hover:text-amber-500 transition-colors p-2"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 text-white hover:text-amber-500 transition-colors p-2 sm:p-3 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Close lightbox"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <svg
-              className="w-8 h-8"
+              className="w-7 h-7 sm:w-8 sm:h-8"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -215,17 +214,18 @@ export default function PhotoGallery() {
             </svg>
           </button>
 
-          {/* Previous button */}
+          {/* Previous button - visible on mobile for swipe alternative */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               goToPrevious();
             }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white hover:text-amber-500 transition-colors p-2 hidden sm:block"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 text-white hover:text-amber-500 transition-colors p-2 sm:p-3 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/30 rounded-full sm:bg-transparent sm:rounded-none"
             aria-label="Previous image"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <svg
-              className="w-10 h-10"
+              className="w-8 h-8 sm:w-10 sm:h-10"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -239,17 +239,18 @@ export default function PhotoGallery() {
             </svg>
           </button>
 
-          {/* Next button */}
+          {/* Next button - visible on mobile for swipe alternative */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               goToNext();
             }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white hover:text-amber-500 transition-colors p-2 hidden sm:block"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 text-white hover:text-amber-500 transition-colors p-2 sm:p-3 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/30 rounded-full sm:bg-transparent sm:rounded-none"
             aria-label="Next image"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <svg
-              className="w-10 h-10"
+              className="w-8 h-8 sm:w-10 sm:h-10"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

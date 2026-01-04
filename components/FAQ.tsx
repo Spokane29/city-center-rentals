@@ -48,14 +48,14 @@ export default function FAQ() {
   };
 
   return (
-    <section className="bg-slate-50 py-16">
-      <div className="container mx-auto px-4">
+    <section className="bg-slate-50 py-12 sm:py-16">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 sm:mb-8 text-center">
             Common Questions
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {faqItems.map((item, index) => (
               <div
                 key={index}
@@ -63,14 +63,15 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => toggleItem(index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
+                  className="w-full px-4 sm:px-6 py-3.5 sm:py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors touch-manipulation min-h-[60px] sm:min-h-[64px]"
                   aria-expanded={openIndex === index}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
-                  <span className="font-semibold text-slate-900 pr-4">
+                  <span className="font-semibold text-slate-900 pr-3 sm:pr-4 text-sm sm:text-base">
                     {item.question}
                   </span>
                   <svg
-                    className={`w-5 h-5 text-slate-600 flex-shrink-0 transition-transform duration-200 ${
+                    className={`w-5 h-5 sm:w-6 sm:h-6 text-slate-600 flex-shrink-0 transition-transform duration-200 ${
                       openIndex === index ? "rotate-180" : ""
                     }`}
                     fill="none"
@@ -91,7 +92,7 @@ export default function FAQ() {
                     openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="px-6 pb-4 text-slate-700 leading-relaxed">
+                  <div className="px-4 sm:px-6 pb-3 sm:pb-4 text-sm sm:text-base text-slate-700 leading-relaxed">
                     {item.answer}
                   </div>
                 </div>

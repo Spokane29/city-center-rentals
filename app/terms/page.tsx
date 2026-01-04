@@ -110,8 +110,8 @@ export default function TermsPage() {
                   LIMITATION OF LIABILITY
                 </h2>
                 <p className="text-slate-700 leading-relaxed">
-                  This website is provided &quot;as is&quot; without warranties of any kind. Mccoy
-                  Real Estate LLC is not liable for any damages arising from your use of
+                  This website is provided &quot;as is&quot; without warranties of any kind. City Center
+                  Rentals LLC is not liable for any damages arising from your use of
                   this website.
                 </p>
               </section>
@@ -121,7 +121,7 @@ export default function TermsPage() {
                   CONTACT US
                 </h2>
                 <p className="text-slate-700 leading-relaxed">
-                  Mccoy Real Estate LLC
+                  City Center Rentals LLC
                   <br />
                   29 E 6th Ave
                   <br />

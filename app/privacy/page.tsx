@@ -41,7 +41,7 @@ export default function PrivacyPage() {
 
             <div className="prose prose-slate max-w-none space-y-8">
               <p className="text-lg text-slate-700 leading-relaxed">
-                City Center Apartments, managed by Mccoy Real Estate LLC, respects
+                City Center Apartments, managed by City Center Rentals LLC, respects
                 your privacy. This policy explains how we collect, use, and protect
                 your information.
               </p>
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
                   CONTACT US
                 </h2>
                 <p className="text-slate-700 leading-relaxed">
-                  Mccoy Real Estate LLC
+                  City Center Rentals LLC
                   <br />
                   29 E 6th Ave
                   <br />

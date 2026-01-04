@@ -9,6 +9,7 @@ interface FormData {
   email: string;
   propertyInterest: string;
   moveInDate: string;
+  scheduleViewing: boolean;
   message: string;
 }
 
@@ -27,6 +28,7 @@ export default function LeadForm() {
     email: "",
     propertyInterest: "",
     moveInDate: "",
+    scheduleViewing: false,
     message: "",
   });
 
@@ -56,7 +58,8 @@ export default function LeadForm() {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
 
     if (name === "phone") {
       setFormData((prev) => ({
@@ -71,6 +74,11 @@ export default function LeadForm() {
           [name]: value,
         }));
       }
+    } else if (type === "checkbox") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -137,21 +145,22 @@ export default function LeadForm() {
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim() || undefined,
-          phone: phoneDigits,
-          email: formData.email.trim() || undefined,
-          propertyInterest:
-            formData.propertyInterest || undefined,
-          moveInDate: formData.moveInDate || undefined,
-          message: formData.message.trim() || undefined,
-          utm_source: params.get("utm_source") || undefined,
-          utm_medium: params.get("utm_medium") || undefined,
-          utm_campaign: params.get("utm_campaign") || undefined,
-          utm_content: params.get("utm_content") || undefined,
-          referrer: document.referrer || undefined,
-        }),
+          body: JSON.stringify({
+            firstName: formData.firstName.trim(),
+            lastName: formData.lastName.trim() || undefined,
+            phone: phoneDigits,
+            email: formData.email.trim() || undefined,
+            propertyInterest:
+              formData.propertyInterest || undefined,
+            moveInDate: formData.moveInDate || undefined,
+            scheduleViewing: formData.scheduleViewing || undefined,
+            message: formData.message.trim() || undefined,
+            utm_source: params.get("utm_source") || undefined,
+            utm_medium: params.get("utm_medium") || undefined,
+            utm_campaign: params.get("utm_campaign") || undefined,
+            utm_content: params.get("utm_content") || undefined,
+            referrer: document.referrer || undefined,
+          }),
       });
 
       if (!response.ok) {
@@ -222,20 +231,20 @@ export default function LeadForm() {
   return (
     <section
       id="contact-form"
-      className="bg-white py-16 border-t border-slate-200"
+      className="bg-white py-12 sm:py-16 border-t border-slate-200"
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-slate-900 mb-3">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2 sm:mb-3">
               Interested? Let&apos;s Talk.
             </h2>
-            <p className="text-lg text-slate-600">
+            <p className="text-base sm:text-lg text-slate-600">
               Fill out the form below and we&apos;ll text you within minutes.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* First Name */}
             <div>
               <label
@@ -374,6 +383,23 @@ export default function LeadForm() {
               />
             </div>
 
+            {/* Schedule a Viewing */}
+            <div>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="scheduleViewing"
+                  name="scheduleViewing"
+                  checked={formData.scheduleViewing}
+                  onChange={handleChange}
+                  className="w-5 h-5 text-amber-500 border-slate-300 rounded focus:ring-amber-500 focus:ring-2"
+                />
+                <span className="text-sm font-medium text-slate-700">
+                  I&apos;d like to schedule a viewing
+                </span>
+              </label>
+            </div>
+
             {/* Questions */}
             <div>
               <label
@@ -408,13 +434,14 @@ export default function LeadForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 disabled:cursor-not-allowed text-slate-900 font-semibold py-4 px-6 rounded-lg transition-colors"
+              className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 disabled:cursor-not-allowed text-slate-900 font-semibold py-3.5 sm:py-4 px-6 rounded-lg transition-colors touch-manipulation text-base sm:text-lg"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {isSubmitting ? "Submitting..." : "Schedule a Tour"}
             </button>
 
             {/* Call us directly */}
-            <p className="text-center text-slate-600 text-sm">
+            <p className="text-center text-slate-600 text-xs sm:text-sm">
               Or call us directly:{" "}
               <a
                 href="tel:8886130442"

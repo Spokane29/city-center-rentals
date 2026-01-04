@@ -4,10 +4,19 @@ import { createClient } from "@supabase/supabase-js";
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
+  // Safety: avoid crashing when env vars are missing or invalid
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.SUPABASE_SERVICE_ROLE_KEY
+  ) {
+    console.warn("[visits] Missing Supabase env vars; skipping insert");
+    return NextResponse.json({ success: true, skipped: true });
+  }
+
   try {
     const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
     // Get the property ID (first property for now)
@@ -32,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("Supabase error:", err);
+    console.error("Supabase error (visits):", err);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }

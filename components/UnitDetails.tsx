@@ -1,10 +1,10 @@
 export default function UnitDetails() {
   return (
-    <section className="bg-slate-50 py-16">
-      <div className="container mx-auto px-4">
+    <section className="bg-slate-50 py-12 sm:py-16">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-8 border border-slate-200">
-            <h2 className="text-3xl font-bold text-slate-900 mb-6">
+          <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 border border-slate-200">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4 sm:mb-6">
               Unit Details
             </h2>
             <div className="space-y-4">
