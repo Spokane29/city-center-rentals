@@ -57,7 +57,7 @@ export default function PropertyWithForm() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, setError] = useState("");
 
   // Interior images only - Living.jpeg is the main/first image
@@ -182,17 +182,18 @@ export default function PropertyWithForm() {
         throw new Error("Failed to submit");
       }
 
-      setSubmitted(true);
-
       // Fire Facebook Pixel event if available
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "Lead");
       }
 
-      // Redirect to home page after a brief delay to show success message
+      // Show success modal
+      setShowSuccessModal(true);
+
+      // Redirect to home page after showing success message
       setTimeout(() => {
         window.location.href = '/';
-      }, 2000);
+      }, 2500);
     } catch (err) {
       setError("Something went wrong. Please call us at (888) 613-0442.");
     } finally {
@@ -225,47 +226,6 @@ export default function PropertyWithForm() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [images.length]);
-
-  if (submitted) {
-    return (
-      <section className="bg-white py-16 sm:py-20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8 sm:p-12 text-center">
-            <div className="mb-6">
-              <svg
-                className="w-16 h-16 text-green-500 mx-auto mb-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Thanks, {formData.firstName}!
-            </h2>
-            <p className="text-lg text-slate-700 mb-6">
-              We&apos;ll text you shortly to schedule a tour.
-            </p>
-            <p className="text-slate-600">
-              Need us sooner?{" "}
-              <a
-                href="tel:8886130442"
-                className="text-blue-600 hover:text-blue-700 font-semibold"
-              >
-                Call (888) 613-0442
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="bg-white pt-20 sm:pt-24 pb-12 sm:pb-16">
@@ -425,6 +385,38 @@ export default function PropertyWithForm() {
               </div>
             </div>
           </div>
+
+          {/* Success Modal */}
+          {showSuccessModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-8 text-center transform transition-all">
+                <div className="mb-6">
+                  <svg
+                    className="w-16 h-16 text-green-500 mx-auto"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                  Thanks, {formData.firstName}!
+                </h2>
+                <p className="text-lg text-slate-700 mb-6">
+                  We&apos;ll contact you shortly to schedule a tour.
+                </p>
+                <p className="text-slate-600 text-sm">
+                  Redirecting to home page...
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Right Column - Contact Form (1/3 width) */}
           <div className="lg:col-span-1">

@@ -4,8 +4,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     
-    console.log('Received lead:', JSON.stringify(body))
-    
     const { firstName, lastName, email, phone, tourDate, tourTime, notes } = body;
     
     const response = await fetch('https://leasingvoice.com/api/public/lead', {
@@ -21,24 +19,19 @@ export async function POST(request: Request) {
         preferred_tour_time: tourTime,
         additional_notes: notes,
         source: '4spokane.com'
-      })
+      }),
+      // Add timeout to prevent hanging
+      signal: AbortSignal.timeout(10000) // 10 second timeout
     })
-
-    console.log('LeasingVoice status:', response.status)
     
     if (!response.ok) {
-      const errorText = await response.text()
-      console.log('LeasingVoice error:', errorText)
       return NextResponse.json({ error: 'API error' }, { status: 500 })
     }
 
-    const result = await response.json()
-    console.log('LeasingVoice response:', result)
-
+    await response.json()
     return NextResponse.json({ success: true })
     
   } catch (error) {
-    console.error('Lead error:', error)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
