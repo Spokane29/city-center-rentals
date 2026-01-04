@@ -56,32 +56,51 @@ export default function RootLayout({
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
+              // Store page load time for duration tracking
+              var wtsStartTime = Date.now();
+              var wtsDurationSent = false;
+              
+              // Function to send duration to Ardalio
+              function sendWtsDuration() {
+                if (wtsDurationSent) return;
+                wtsDurationSent = true;
+                
+                var duration = Math.round((Date.now() - wtsStartTime) / 1000);
+                var trackingUrl = 'https://app.ardalio.com/7/3/2192966.png?d=' + duration + '&r=' + Math.random();
+                
+                // Use sendBeacon for reliable exit tracking
+                if (navigator.sendBeacon) {
+                  navigator.sendBeacon(trackingUrl);
+                } else {
+                  // Fallback for older browsers
+                  var img = new Image();
+                  img.src = trackingUrl;
+                }
+              }
+              
+              // Load the main tracking script
               var wts=document.createElement('script');wts.async=true;
               wts.src='https://app.ardalio.com/wts7.js';document.head.appendChild(wts);
               wts.onload = function(){ 
                 wtsl7(2192966,3);
-                
-                // Track duration on visibility change (tab switch, minimize)
-                document.addEventListener('visibilitychange', function() {
-                  if (document.visibilityState === 'hidden' && typeof wts_duration === 'function') {
-                    wts_duration();
-                  }
-                });
-                
-                // Track duration on page unload
-                window.addEventListener('beforeunload', function() {
-                  if (typeof wts_duration === 'function') {
-                    wts_duration();
-                  }
-                });
-                
-                // Track duration on pagehide (iOS Safari)
-                window.addEventListener('pagehide', function() {
-                  if (typeof wts_duration === 'function') {
-                    wts_duration();
-                  }
-                });
               };
+              
+              // Track duration on visibility change (tab switch, minimize, close)
+              document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'hidden') {
+                  sendWtsDuration();
+                }
+              });
+              
+              // Track duration on page unload (desktop browsers)
+              window.addEventListener('beforeunload', function() {
+                sendWtsDuration();
+              });
+              
+              // Track duration on pagehide (iOS Safari, mobile browsers)
+              window.addEventListener('pagehide', function(e) {
+                sendWtsDuration();
+              });
             `,
           }}
         />
