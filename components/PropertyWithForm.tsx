@@ -172,8 +172,8 @@ export default function PropertyWithForm() {
           lastName: formData.lastName.trim() || "",
           email: formData.email.trim() || "",
           phone: phoneDigits,
-          preferredDate: formData.tourDate || "",
-          preferredTime: formData.tourTime.trim() || "",
+          tourDate: formData.tourDate || "",
+          tourTime: formData.tourTime.trim() || "",
           notes: formData.notes.trim() || "",
         }),
       });

@@ -6,18 +6,20 @@ export async function POST(request: Request) {
     
     console.log('Received lead:', JSON.stringify(body))
     
+    const { firstName, lastName, email, phone, tourDate, tourTime, notes } = body;
+    
     const response = await fetch('https://leasingvoice.com/api/public/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         company_id: '322039f9-b67b-4084-b806-387ba26c4810',
-        first_name: body.firstName || null,
-        last_name: body.lastName || null,
-        email: body.email || null,
-        phone: body.phone,
-        preferred_tour_date: body.preferredDate || null,
-        preferred_tour_time: body.preferredTime || null,
-        additional_notes: body.notes || null,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone: phone,
+        preferred_tour_date: tourDate,
+        preferred_tour_time: tourTime,
+        additional_notes: notes,
         source: '4spokane.com'
       })
     })
