@@ -236,7 +236,7 @@ export default function PropertyWithForm() {
             {/* Property Title, Address, and Key Details - Level with Form */}
             <div className="mb-5">
               <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
-                City Center Apartments
+                Beautiful 1 Bedroom Apartment Available Now !
               </h1>
               <p className="text-slate-600 text-lg mb-4">
                 29 E 6th Ave, Spokane, WA 99202

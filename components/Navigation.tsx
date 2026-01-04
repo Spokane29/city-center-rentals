@@ -25,7 +25,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="text-base sm:text-lg md:text-xl font-bold text-white truncate pr-2">
-            City Center Apartments
+            Beautiful 1 Bedroom Apartment Available Now !
           </div>
 
           {/* Right side - Phone */}
