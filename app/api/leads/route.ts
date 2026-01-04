@@ -6,18 +6,27 @@ export async function POST(request: Request) {
     
     console.log('Received lead:', JSON.stringify(body))
     
-    const response = await fetch('https://leasingvoice.com/api/leads/external', {
+    // Combine firstName and lastName into name
+    const name = [body.firstName, body.lastName].filter(Boolean).join(' ').trim()
+    
+    // Build message from moveInDate and message if provided
+    let message = body.message || null
+    if (body.moveInDate && body.moveInDate.trim()) {
+      const dateMessage = `Preferred Move-In Date: ${body.moveInDate}`
+      message = message ? `${dateMessage}\n\n${message}` : dateMessage
+    }
+    
+    const response = await fetch('https://leasingvoice.com/api/public/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        firstName: body.firstName,
-        lastName: body.lastName || '',
+        company_id: '322039f9-b67b-4084-b806-387ba26c4810',
+        name: name,
         phone: body.phone,
-        email: body.email || '',
-        propertyInterest: body.propertyInterest || '1 Bedroom - $1,000/mo',
-        moveInDate: body.moveInDate || '',
-        message: body.message || '',
-        source: '4spokane'
+        email: body.email || null,
+        property: body.propertyInterest || null,
+        message: message,
+        source: '4spokane.com'
       })
     })
 
@@ -28,6 +37,9 @@ export async function POST(request: Request) {
       console.log('LeasingVoice error:', errorText)
       return NextResponse.json({ error: 'API error' }, { status: 500 })
     }
+
+    const result = await response.json()
+    console.log('LeasingVoice response:', result)
 
     return NextResponse.json({ success: true })
     
