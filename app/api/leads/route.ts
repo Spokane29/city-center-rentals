@@ -6,26 +6,18 @@ export async function POST(request: Request) {
     
     console.log('Received lead:', JSON.stringify(body))
     
-    // Combine firstName and lastName into name
-    const name = [body.firstName, body.lastName].filter(Boolean).join(' ').trim()
-    
-    // Build message from moveInDate and message if provided
-    let message = body.message || null
-    if (body.moveInDate && body.moveInDate.trim()) {
-      const dateMessage = `Preferred Move-In Date: ${body.moveInDate}`
-      message = message ? `${dateMessage}\n\n${message}` : dateMessage
-    }
-    
     const response = await fetch('https://leasingvoice.com/api/public/lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         company_id: '322039f9-b67b-4084-b806-387ba26c4810',
-        name: name,
-        phone: body.phone,
+        first_name: body.firstName || null,
+        last_name: body.lastName || null,
         email: body.email || null,
-        property: body.propertyInterest || null,
-        message: message,
+        phone: body.phone,
+        preferred_tour_date: body.preferredDate || null,
+        preferred_tour_time: body.preferredTime || null,
+        additional_notes: body.notes || null,
         source: '4spokane.com'
       })
     })

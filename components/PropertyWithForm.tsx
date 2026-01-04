@@ -163,11 +163,6 @@ export default function PropertyWithForm() {
       // Format phone for API (digits only)
       const phoneDigits = formData.phone.replace(/\D/g, "");
 
-      // Combine preferred time and notes for message
-      const message = formData.tourTime.trim() 
-        ? formData.tourTime.trim() + " - " + (formData.notes.trim() || "")
-        : formData.notes.trim() || "";
-
       // Submit to our API route (which handles LeasingVoice API)
       const response = await fetch("/api/leads", {
         method: "POST",
@@ -175,11 +170,11 @@ export default function PropertyWithForm() {
         body: JSON.stringify({
           firstName: formData.firstName.trim(),
           lastName: formData.lastName.trim() || "",
-          phone: phoneDigits,
           email: formData.email.trim() || "",
-          propertyInterest: "1 Bedroom - $1,000/mo",
-          moveInDate: formData.tourDate || "",
-          message: message,
+          phone: phoneDigits,
+          preferredDate: formData.tourDate || "",
+          preferredTime: formData.tourTime.trim() || "",
+          notes: formData.notes.trim() || "",
         }),
       });
 
