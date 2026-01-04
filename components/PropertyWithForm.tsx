@@ -171,14 +171,9 @@ export default function PropertyWithForm() {
       const phoneDigits = formData.phone.replace(/\D/g, "");
 
       // Combine preferred time and notes for message
-      const messageParts = [];
-      if (formData.tourTime.trim()) {
-        messageParts.push(`Preferred Time: ${formData.tourTime.trim()}`);
-      }
-      if (formData.notes.trim()) {
-        messageParts.push(formData.notes.trim());
-      }
-      const combinedMessage = messageParts.length > 0 ? messageParts.join(" - ") : undefined;
+      const message = formData.tourTime.trim() 
+        ? formData.tourTime.trim() + " - " + (formData.notes.trim() || "")
+        : formData.notes.trim() || "";
 
       // Submit to our API route (which handles LeasingVoice API)
       const response = await fetch("/api/leads", {
@@ -191,8 +186,7 @@ export default function PropertyWithForm() {
           email: formData.email.trim() || "",
           propertyInterest: "1 Bedroom - $1,000/mo",
           moveInDate: formData.tourDate || "",
-          message: combinedMessage || "",
-          source: "city-center-rentals",
+          message: message,
         }),
       });
 
