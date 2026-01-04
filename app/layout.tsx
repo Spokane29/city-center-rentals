@@ -49,14 +49,39 @@ export default function RootLayout({
         </noscript>
         <Analytics />
         {children}
-        {/* Ardalio Tracking Code */}
+        {/* Ardalio Tracking Code with Duration Support */}
         <span id="wts2192966" style={{ display: 'none' }}></span>
-        <script
+        <Script
+          id="ardalio-tracking"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               var wts=document.createElement('script');wts.async=true;
               wts.src='https://app.ardalio.com/wts7.js';document.head.appendChild(wts);
-              wts.onload = function(){ wtsl7(2192966,3); };
+              wts.onload = function(){ 
+                wtsl7(2192966,3);
+                
+                // Track duration on visibility change (tab switch, minimize)
+                document.addEventListener('visibilitychange', function() {
+                  if (document.visibilityState === 'hidden' && typeof wts_duration === 'function') {
+                    wts_duration();
+                  }
+                });
+                
+                // Track duration on page unload
+                window.addEventListener('beforeunload', function() {
+                  if (typeof wts_duration === 'function') {
+                    wts_duration();
+                  }
+                });
+                
+                // Track duration on pagehide (iOS Safari)
+                window.addEventListener('pagehide', function() {
+                  if (typeof wts_duration === 'function') {
+                    wts_duration();
+                  }
+                });
+              };
             `,
           }}
         />
