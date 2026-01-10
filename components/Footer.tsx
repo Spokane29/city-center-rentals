@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-100 py-8 sm:py-10 lg:py-12">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+    <footer className="bg-slate-900 text-slate-100 py-8 sm:py-10 lg:py-12 overflow-x-hidden">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
         {/* Mobile: Stacked layout with larger touch targets */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
           {/* Contact - First on mobile */}

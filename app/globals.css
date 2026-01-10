@@ -3,25 +3,36 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 248 250 252; /* slate-50 */
-    --foreground: 15 23 42; /* slate-900 */
-    --primary: 15 23 42; /* slate-900 */
-    --primary-foreground: 248 250 252; /* slate-50 */
-    --accent: 245 158 11; /* amber-500 */
-    --accent-foreground: 15 23 42; /* slate-900 */
-    --muted: 100 116 139; /* slate-500 */
-    --muted-foreground: 100 116 139; /* slate-500 */
-    --border: 226 232 240; /* slate-200 */
-  }
-}
-
-@layer base {
   * {
-    @apply border-border;
+    box-sizing: border-box;
   }
+  
+  /* iOS overscroll background - use dark color to match nav/footer */
+  :root {
+    background-color: #0f172a; /* slate-900 - matches footer */
+  }
+  
+  html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #0f172a; /* slate-900 for iOS overscroll */
+    -webkit-overflow-scrolling: touch;
+  }
+  
   body {
-    @apply bg-background text-foreground;
+    background-color: #f8fafc; /* slate-50 - main content background */
+    color: #0f172a; /* slate-900 */
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent horizontal overflow on all main containers */
+  main, section, div, nav, footer, header, article, aside {
+    max-width: 100vw;
   }
 }
 

@@ -7,6 +7,16 @@ export const metadata: Metadata = {
   title: "City Center Apartments - Downtown Spokane Living",
   description:
     "Spacious 1-bedroom apartment in downtown Spokane. Walk to Gonzaga University and Sacred Heart Medical Center. $1,000/month.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
+  themeColor: "#1e293b", /* slate-800 - matches the nav bar */
+  other: {
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+  },
 };
 
 export default function RootLayout({
@@ -15,10 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <head>
       </head>
-      <body className="antialiased" suppressHydrationWarning>
+      <body className="antialiased overflow-x-hidden" suppressHydrationWarning>
         {/* Facebook Meta Pixel */}
         <Script
           id="facebook-pixel"

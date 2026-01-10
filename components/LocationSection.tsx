@@ -1,7 +1,7 @@
 export default function LocationSection() {
   return (
-    <section className="bg-slate-50 py-8 sm:py-12 lg:py-16">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+    <section className="bg-slate-50 py-8 sm:py-12 lg:py-16 overflow-x-hidden">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
         {/* Unbeatable Location Section */}
         <div className="mb-6 sm:mb-10 lg:mb-12">
           <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-900 mb-3 sm:mb-4 lg:mb-6 text-center">

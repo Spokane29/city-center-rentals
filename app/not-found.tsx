@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Navigation />
-      <div className="bg-white py-32">
+      <div className="bg-white py-32 overflow-x-hidden">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-6xl font-bold text-slate-900 mb-4">404</h1>
           <p className="text-xl text-slate-600 mb-8">

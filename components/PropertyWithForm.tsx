@@ -255,8 +255,8 @@ export default function PropertyWithForm() {
   }, [images.length]);
 
   return (
-    <section className="bg-white pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+    <section className="bg-white pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 overflow-x-hidden">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
         {/* Mobile: Title first, then form, then gallery */}
         {/* Desktop: Gallery left, form right */}
         
@@ -395,7 +395,8 @@ export default function PropertyWithForm() {
             </div>
 
             {/* Thumbnail Grid - Scrollable on mobile */}
-            <div className="flex gap-2 sm:grid sm:grid-cols-4 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 -mx-3 px-3 sm:mx-0 sm:px-0 scrollbar-hide">
+            <div className="overflow-hidden -mx-3 sm:mx-0">
+              <div className="flex gap-2 sm:grid sm:grid-cols-4 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 px-3 sm:px-0 scrollbar-hide">
               {images.map((image, index) => (
                 <button
                   key={index}
@@ -422,6 +423,7 @@ export default function PropertyWithForm() {
                   )}
                 </button>
               ))}
+              </div>
             </div>
 
             {/* Description */}

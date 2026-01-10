@@ -9,9 +9,9 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Navigation />
-      <div className="bg-white py-16">
+      <div className="bg-white py-16 overflow-x-hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <Link
