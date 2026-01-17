@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import Analytics from "@/components/Analytics";
@@ -7,16 +7,17 @@ export const metadata: Metadata = {
   title: "City Center Apartments - Downtown Spokane Living",
   description:
     "Spacious 1-bedroom apartment in downtown Spokane. Walk to Gonzaga University and Sacred Heart Medical Center. $1,000/month.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
-  themeColor: "#1e293b", /* slate-800 - matches the nav bar */
   other: {
     "apple-mobile-web-app-status-bar-style": "black-translucent",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#1e293b", /* slate-800 - matches the nav bar */
 };
 
 export default function RootLayout({

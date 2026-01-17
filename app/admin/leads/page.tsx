@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "@/components/AdminLayout";
 
 interface Lead {
@@ -36,7 +36,27 @@ export default function LeadsPage() {
   });
 
   useEffect(() => {
-    fetchLeads();
+    const doFetch = async () => {
+      setIsLoading(true);
+      try {
+        const params = new URLSearchParams({
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          source: filters.source,
+          ...(filters.search && { search: filters.search }),
+        });
+
+        const res = await fetch(`/api/admin/leads?${params}`);
+        const data = await res.json();
+        setLeads(data.leads || []);
+        setTotal(data.total || 0);
+      } catch (err) {
+        console.error("Failed to fetch leads:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    doFetch();
   }, [filters]);
 
   const fetchLeads = async () => {
@@ -221,9 +241,8 @@ export default function LeadsPage() {
                 <tbody className="bg-white divide-y divide-slate-200">
                   {leads.length > 0 ? (
                     leads.map((lead) => (
-                      <>
+                      <React.Fragment key={lead.id}>
                         <tr
-                          key={lead.id}
                           className="hover:bg-slate-50 cursor-pointer"
                           onClick={() =>
                             setExpandedId(expandedId === lead.id ? null : lead.id)
@@ -302,7 +321,7 @@ export default function LeadsPage() {
                             </td>
                           </tr>
                         )}
-                      </>
+                      </React.Fragment>
                     ))
                   ) : (
                     <tr>
